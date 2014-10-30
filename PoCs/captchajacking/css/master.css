@@ -1,0 +1,170 @@
+* {margin: 0; padding: 0; border: none;}
+
+html, body {height: 100%; width: 100%;}
+body {
+	background: #f0f0f0;
+	font-family: helvetica, Arial;
+	font-size: 12px;
+	color: #4b4b4b;
+	line-height: 20px;
+}
+
+ul, li{
+  list-style: none;
+}
+
+a{
+  text-decoration: none;
+}
+
+
+#container{
+  margin: 0 auto;
+  width: 500px;
+}
+
+#main{
+  width: 500px;
+  float: right;
+}
+
+
+#header{
+  padding: 50px 0;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+h1{
+  font-size: 30px;
+  font-weight: normal;
+}
+
+#main table{
+  width: 100%;
+  font-size: 15px;
+}
+
+.form-input-name{
+  width: 200px;
+  text-align: right;
+}
+
+
+#main table tr td{
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  border-top: 1px solid #fff;
+}
+
+#main table tr:last-child td{
+  padding: 10px;
+  border-bottom: none;
+  border-top: 1px solid #fff;
+}
+
+input[type=text]:focus, textarea:focus, input[type=email]:focus, input[type=number]:focus, input[type=password]:focus{
+  color: #000;
+  border: 1px solid #96a641;
+}
+
+input[type=submit]{
+background: #a4b357; /* Old browsers */
+background: -moz-linear-gradient(top, #a4b357 0%, #75890c 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a4b357), color-stop(100%,#75890c)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #a4b357 0%,#75890c 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #a4b357 0%,#75890c 100%); /* Opera11.10+ */
+background: -ms-linear-gradient(top, #a4b357 0%,#75890c 100%); /* IE10+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a4b357', endColorstr='#75890c',GradientType=0 ); /* IE6-9 */
+background: linear-gradient(top, #a4b357 0%,#75890c 100%); /* W3C */
+padding: 10px;
+font-size: 20px;
+font-weight: normal;
+width: 250px;
+color: #fff;
+border-radius: 4px;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+cursor: pointer;
+text-shadow: 1px 1px 1px #4b4b4b;
+}
+
+input[type=submit]:hover{
+background: #e4efc0; /* Old browsers */
+background: -moz-linear-gradient(top, #e4efc0 0%, #abbd73 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e4efc0), color-stop(100%,#abbd73)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #e4efc0 0%,#abbd73 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #e4efc0 0%,#abbd73 100%); /* Opera11.10+ */
+background: -ms-linear-gradient(top, #e4efc0 0%,#abbd73 100%); /* IE10+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4efc0', endColorstr='#abbd73',GradientType=0 ); /* IE6-9 */
+background: linear-gradient(top, #e4efc0 0%,#abbd73 100%); /* W3C */
+color: #fff;
+text-shadow: 1px 1px 1px #4b4b4b;
+}
+
+input[type=text], input[type=email], input[type=number], input[type=password]{
+background: #f7f7f7; /* Old browsers */
+background: -moz-linear-gradient(top, #f7f7f7 0%, #ffffff 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f7f7), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #f7f7f7 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #f7f7f7 0%,#ffffff 100%); /* Opera11.10+ */
+background: -ms-linear-gradient(top, #f7f7f7 0%,#ffffff 100%); /* IE10+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+background: linear-gradient(top, #f7f7f7 0%,#ffffff 100%); /* W3C */
+box-shadow:inset 1px 1px 3px #d8d8d8;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: normal;
+  width: 250px;
+  color: #d9d9d9;
+  height: 20px;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border: 1px solid #f0f0f0;
+  text-shadow: -1px -1px 1px #fff;
+}
+
+textarea{
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  color: #d9d9d9;
+  font-family: Helvetica, Arial;
+  width: 250px;
+}
+
+.toggle_code{
+  cursor: pointer;
+  padding: 0 10px;
+  font-size: 20px;
+}
+
+
+tr.code{
+  display: none;
+  background: #fff;
+  color: #444444;
+  font-size: 12px;
+}
+#main table tr.code td{
+  border: none;
+}
+
+.clear{
+  clear: both;
+}
+
+
+.footer {
+    text-align: center;
+    text-shadow: 1px 1px 1px #ABABAB;
+    padding: 50px 0 20px;
+}
+
+.footer a{
+color: #A81111;
+}
+
