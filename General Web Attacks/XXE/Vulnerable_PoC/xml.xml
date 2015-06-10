@@ -1,0 +1,3 @@
+<?xml version="1.0"?>
+<!DOCTYPE foo SYSTEM "http://localhost:8000/dtd" >
+<foo>&data;</foo>
