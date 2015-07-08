@@ -1,0 +1,198 @@
+http://vwzq.net/challenge/jsonhijack.html 
+JSON hijacking minichallenge
+
+2015/06/29
+Goal: Alert (what else?) the secret token stored in this json file, cross domainly.
+
+Rules:
+
+Not server side involved
+Modern browsers only
+(I expect a link to a page with your solution)
+RESTECP!
+No user interaction
+Hall of fame:
+
+@kinugawamasato (2015/06/30)
+@filedescriptor (2015/06/30)
+@0x6D6172696F (2015/06/30)
+@s3cur1tyrocks (2015/07/01)
+Challenge WriteUp on 2015/07/08
+
+As a gift for my birthday (yep, i'm getting older today), here it
+is the solution for this challenge. Which is in fact quite simple as we will
+see in a moment.
+
+*****Expected solution*****
+
+This is the solution that all solvers used (with little modifications). The
+first thing to note was that the page did not specify any charset in the
+"Content-Type" header, what should have given us a big clue about where were the
+shots.
+
+Another hint was the title itself: "JSON hijacking". <comment>Or my last posts
+playing with charsets ;P</comment> So We just needed to take a quick view to
+these issues in the past [http://www.thespanner.co.uk/2011/05/30/json-hijacking/]
+(courtesy of Mr. @garethheyes) to get an idea of how these attacks usually work.
+
+It seems that We require to "script source" the vulnerable page and then do some
+kind of obscure magic:
+
+----------
+<script src="http://demo.vwzq.net/php/secret.php?uid="></script>
+----------
+
+Unfortunately, there is a "while(1)" that will mess with us :) And here comes
+the "trick", since the remote page does not specify a charset, we can set it in
+the script tag. The requirement is that we should use a non-ASCII compliance encoding in order to
+avoid the infinite loop. The first option is trying UTF-16 or UTF-32, since
+they will consume 2 and 4 bytes for each character (breaking the "while" token).
+
+----------
+<script charset="utf-16" src="http://demo.vwzq.net/php/secret.php?uid="></script>
+----------
+
+Results in the following invalid Javascript: "桷汩⡥⤱嬻瑻歯湥∺敳牣瑥∱甬摩∺索".
+
+----------
+<script charset="utf-32" src="http://demo.vwzq.net/php/secret.php?uid="></script>
+----------
+
+Results in the following invalid Javascript: "���������".
+
+UTF-32 will not generate any valid JS character (in this case we expect an
+identifier), but UTF-16 seems to give us some valid characters:
+
+wh - 桷 (VALID)
+il - 汩 (VALID)
+e( - ⡥  (INVALID)
+1) - ⤱  (INVALID)
+;[ - 嬻 (VALID)
+{t - 瑻 (VALID)
+ok - 歯 (VALID)
+en - 湥 (VALID)
+:" - ∺  (INVALID)
+se - 敳 (VALID)
+cr - 牣 (VALID)
+et - 瑥 (VALID)
+1" - ∱ (INVALID)
+,u - 甬 (VALID)
+id - 摩 (VALID)
+:" - ∺ (INVALID)
+...
+
+Most alphanumeric ASCII bytes results in a valid UTF-16 character, but some
+other pairs fail. We can also try with UTF-16BE (Big Endian representation, by
+default UTF-16 uses Little Endian).
+
+----------
+<script charset="utf-16be" src="http://demo.vwzq.net/php/secret.php?uid="></script>
+----------
+
+Which results in an almost valid Javascript identifier: "睨楬攨ㄩ㭛筴潫敮㨢獥捲整ㄢ楤㨢".
+
+Now you can imagine what is going on.
+
+Note: this scenario is not very realistic since the returned JSON is a bit
+custom.
+
+Now, since we control the last part of the embedded javascript because of the
+parameter "uid", we just need to retrieve the information. Most solutions used
+an assignment "unicode_identifier=1//" and then tried to access the "window"
+object looking for the identifier name (which contains the secret inside its
+bytes).
+
+----------
+<script charset="utf-16be" src="http://demo.vwzq.net/php/secret.php?uid=%00=%001%00/%00/"></script>
+----------
+
+The "%00" is necessary because ASCII chars in UTF-16 have the same hex value
+plus a null less or more significant byte, depending on BE or LE.
+
+.mario, filedescriptor and s3cur1tyrocks' solutions iterate over the window
+properties looking for the ones matching with /^W/, mine used
+"Object.keys(self).pop()" to get the last property setted (I'm that dirty).
+
+Masato, in the other hand, did not need even an assigment. He set a "Proxy"
+to "window.__proto__" (only FF) and intercepted the access to the property in
+order to get its name ("睨楬攨ㄩ㭛筴潫敮㨢獥捲整ㄢ楤㨢䄢絝") :)
+
+Once we get the Chinese-with-some-phonetical-Mandarin-phonetic-symbols identifier
+(thanks to @filedescriptor xD), only rests to get the byte representation
+and transform it back to ASCII:
+
+----------
+<script>unescape(escape("睨楬攨ㄩ㭛筴潫敮㨢獥捲整ㄢ楤㨢䄢絝").replace(/%u(..)(..)/g,'%$1%$2'))</script>
+----------
+
+After that we only need to substring the token an "alert" it. Easy peasy.
+
+So, my complete solution for Chrome was:
+
+----------
+<script charset="utf-16be" src="http://demo.vwzq.net/php/secret.php?uid=%00=%001%00%2f%00%2f"></script>
+<script>alert(unescape(escape((Object.keys(window).pop())).replace(/%u(..)(..)/g,'%$1%$2')).substr(18,7))</script>
+----------
+
+As I said, it wasn't a hard challenge and it didn't use anything new, in fact
+Masato blog about it in 2012 [http://masatokinugawa.l0.cm/2012/05/utf-16content-security-policy.html], though
+I had no idea (thanks to s3cur1tyrocks for the link).
+
+In any case it will work just in very specific scenarios where the JSON casually
+forms a valid UTF-16BE and the server does not specify the charset.
+
+@shafigullin also pointed out if "X-Content-Type-Options: nosniff" would
+mitigate the exploitation. And while in Chrome does it, it's not the case for
+Firefox (you can't test with "secret2.php"). So I guess we have a bug here.
+
+*****Server misconfiguration + Windows/Linux "bug"? + HTML5*****
+
+@BugRoast also came with a very out-of-the-box PoC abusing a misconfiguration on
+my server. It isn't a valid solution because of the required user interaction,
+but I found it interesting enough to worth the mention :) Btw, if you have not
+seen his paper [http://conference.hitb.org/hitbsecconf2015ams/wp-content/uploads/2015/02/WHITEPAPER-Exploiting-Browsers-the-Logical-Way.pdf]
+for HITB, take a look!
+
+His idea consisted in making use of the HTML5 download attribute for anchors, in
+order to force the victim's browser to download the "secret.php" page as an HTML
+file with a XSS and to wait for the local opening of the file.
+
+----------
+<a id="foo" href="http://demo.vwzq.net/php/secret.php?uid=%3Csvg/onload=alert(body.textContent)%3E" download="foo.html">Click</a>
+<script>foo.click()</script>
+----------
+
+Unfortunately, the filename is ignored on X-domain requests, so the browser
+will save the file as "secret.php" which should not be openned by the browser,
+right? Well, here comes the interesting part.
+
+What @BugRoast did was to abuse the following error in my server which allows
+overwriting the path: http://demo.vwzq.net/php/secret.php/foo.html.
+With this trick, which also reminds me to @OrenHafif's Reflected File Download,
+he was able to force Chrome to downloading the JSON file like an HTML file
+containing an <script> element.
+
+However, this is only true for Chrome on Windows and Linux, but not on OSX. On
+OSX, Chrome seems to use the "Content-Type" instead of the URL extension, which
+in this case is "applicaiton/json", to override the extension of the file. What
+in my opinion should be the secure and expected behaviour.
+
+Finally, the full PoC was:
+
+----------
+<a id="foo" href="http://demo.vwzq.net/php/secret.php/open.html?uid=%3Csvg/onload=alert(body.textContent)%3E" download="ignored_name.any">Click</a>
+<script>foo.click()</script>
+----------
+
+*****Inline PDF*****
+
+While preparing the challenge, I also thought about the possibility of injecting
+a valid PDF inside the JSON (since there were no chars restrictions almost), and
+use Acrobat Reader to execute Javascript in the context of the server and
+ultimately read the secret token. @insertScript also mentioned it, but I'm not
+sure if it is really possible... A PoC would be very cool :) Volunteers? 
+
+************ 
+
+And that's all. Thank you for reading and participating, congratulations to the
+solvers and I hope you have enjoyed playing or learned something new :)
