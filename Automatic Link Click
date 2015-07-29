@@ -1,0 +1,2 @@
+<a ping="chrome-extension://gcbommkclmclpchllfjekcdonpmejbdp/" id="link"></a>
+<script>link.click()</script>
