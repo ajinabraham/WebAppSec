@@ -33,10 +33,11 @@ This is where GraphQL gets really interesting, even more so if you are doing a s
 
 **Source Reference**
 
-https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/GraphQL%20Injection
-https://staaldraad.github.io/post/2018-03-16-quick-win-with-graphql/
-https://github.com/doyensec/graph-ql
+* https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/GraphQL%20Injection
+* https://staaldraad.github.io/post/2018-03-16-quick-win-with-graphql/
+* https://github.com/doyensec/graph-ql
 
 **Hardening**
-https://github.com/helfer/graphql-disable-introspection
-https://blog.apollographql.com/securing-your-graphql-api-from-malicious-queries-16130a324a6b
+
+* https://github.com/helfer/graphql-disable-introspection
+* https://blog.apollographql.com/securing-your-graphql-api-from-malicious-queries-16130a324a6b
