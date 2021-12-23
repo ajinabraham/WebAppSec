@@ -1,4 +1,6 @@
 ## source: https://github.com/payloadbox/open-redirect-payload-list
+
+```
 /%09/example.com
 /%2f%2fexample.com
 /%2f%2f%2fbing.com%2f%3fwww.omise.co
@@ -859,3 +861,4 @@ javascripT://anything%0D%0A%0D%0Awindow.alert(document.cookie)
 ///\;@google.com
 ///google.com
 /////google.com/
+```
