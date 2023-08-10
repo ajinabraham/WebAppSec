@@ -65,9 +65,7 @@ import(`../../locales/${user_input}`)
 const [redirectTo, setRedirectTo] = useState('');
 
 const login = async () => {
-  // Assume this function logs the user in...
-  await loginUser();
-
+  await doSomething();
   window.location.href = redirectTo;
 };
 ```
