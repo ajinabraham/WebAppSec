@@ -122,7 +122,7 @@ path.resolve('/tmp', user_input)
 new RegExp(user_input_or_insecure)
 ```
 
-Check all regex with https://github.com/makenowjust-labs/recheck
+Check all regex with [https://github.com/makenowjust-labs/recheck](https://makenowjust-labs.github.io/recheck/playground/)
 
 ## CSRF
 
