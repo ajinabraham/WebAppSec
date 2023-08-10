@@ -116,6 +116,14 @@ path.join('/tmp', user_input)
 path.resolve('/tmp', user_input)
 ```
 
+## ReDoS
+
+```
+new RegExp(user_input_or_insecure)
+```
+
+Check all regex with https://github.com/makenowjust-labs/recheck
+
 ## CSRF
 
 Mostly single page, check if origin is validated or a token is used.
