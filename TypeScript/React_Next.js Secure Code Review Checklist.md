@@ -79,7 +79,7 @@ window.document.location = user_input
 ```
 await axios({
     method: 'post',
-    url: '${user_input}',
+    url: `${user_input}/foo`,
   });
 
 ```
