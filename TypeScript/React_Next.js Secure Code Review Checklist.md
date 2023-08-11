@@ -45,6 +45,17 @@ function renderFullPage(html, preloadedState) {
 }
 ```
 
+```
+// Dangerously Allow SVG without proper CSP 
+module.exports = {
+  images: {
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "",
+  },
+}
+```
+
+
 ## Code Injection
 
 ```
