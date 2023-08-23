@@ -114,6 +114,11 @@ publicRuntimeConfig: {
 	}
 ```
 
+```
+// Expose source map in production, source code leakage.
+productionBrowserSourceMaps: true,
+```
+
 ## Lack of Origin Validation
 
 ```
