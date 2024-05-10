@@ -104,48 +104,6 @@ const response = await fetch(`${user_input}/api/token=1212121233`, {
 request.get(`${user_input}/redirect=${user_input2}`)
 ```
 
-## Sensitive Data Exposure Next.js
-
-```
-// Not suitable for server side secrets
-publicRuntimeConfig: {
-		AWS_API: process.env.AWS_API,
-    GITHUB_TOKEN: process.env.GITHUB_TOKEN ,
-	}
-```
-
-```
-// Expose source map in production, source code leakage.
-productionBrowserSourceMaps: true,
-```
-
-## Lack of Origin Validation
-
-```
-.postMessage(data, '*')
-```
-
-## Path Traversal
-
-```
-path.join('/tmp', user_input)
-path.resolve('/tmp', user_input)
-```
-
-## ReDoS
-
-```
-new RegExp(user_input_or_insecure)
-```
-
-Check all regex with [https://github.com/makenowjust-labs/recheck](https://makenowjust-labs.github.io/recheck/playground/)
-
-## CSRF
-
-Mostly single page, check if origin is validated or a token is used.
-
-## SSRF
-
 Next.Js `Image` configuration can be abused to cause Blind SSRF.
 
 ```
@@ -222,6 +180,47 @@ How this works?
 - The Next.js server first does a preflight HEAD request to the URL.
 - If the preflight returns a Content-Type header of RSC_CONTENT_TYPE_HEADER, which is text/x-component, then NextJS makes a GET request to the same URL.
 - The content of that GET request is then returned in the response.
+
+
+## Sensitive Data Exposure Next.js
+
+```
+// Not suitable for server side secrets
+publicRuntimeConfig: {
+		AWS_API: process.env.AWS_API,
+    GITHUB_TOKEN: process.env.GITHUB_TOKEN ,
+	}
+```
+
+```
+// Expose source map in production, source code leakage.
+productionBrowserSourceMaps: true,
+```
+
+## Lack of Origin Validation
+
+```
+.postMessage(data, '*')
+```
+
+## Path Traversal
+
+```
+path.join('/tmp', user_input)
+path.resolve('/tmp', user_input)
+```
+
+## ReDoS
+
+```
+new RegExp(user_input_or_insecure)
+```
+
+Check all regex with [https://github.com/makenowjust-labs/recheck](https://makenowjust-labs.github.io/recheck/playground/)
+
+## CSRF
+
+Mostly single page, check if origin is validated or a token is used.
 
 ## Regex Search
 
